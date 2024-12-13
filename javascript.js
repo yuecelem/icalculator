@@ -34,9 +34,19 @@ display.textContent = 0
 
 // Adds numButton content to display on each click. 
 // If 0 is displayed, removes and then adds
+// Saves operator if it was displayed 
 numButtons.forEach(button => {
     button.addEventListener("click", () => {
-        if (display.textContent == "0"){
+
+        const containsOperator = Array.from(operators).some(op => display.textContent.includes(op.textContent))
+
+        if (containsOperator) {
+            let operator = display.textContent;
+            display.textContent = ""
+            display.append(button.textContent) 
+            console.log("Operator Saved:", operator)
+        }
+        else if (display.textContent == "0"){
             display.textContent = ""
             display.append(button.textContent)     
         } else {display.append(button.textContent)}})})
@@ -68,7 +78,7 @@ operators.forEach(button => {
         if(!containsOperator) {
             let prevNumber = display.textContent;
             display.textContent = button.textContent;
-            console.log(prevNumber)
+            console.log("Previous Number:", prevNumber)
         } else {
             display.textContent = button.textContent;
         }
