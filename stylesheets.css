@@ -32,7 +32,10 @@ body {
     width: 90%;
     align-self: center;
 }
-.del-button, .enter-button {
+.clear-button, .enter-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
 } 
 .button-section {
