@@ -35,7 +35,7 @@ let operator = ""
 let prevNumber = 0
 let currentNum = 0
 
-
+console.log(divide(20, 4))
 
 // Adds numButton content to display on each click. 
 // If 0 is displayed, removes and then adds
@@ -75,6 +75,7 @@ dotButton.addEventListener("click", () => {
 clearButton.addEventListener("click", () => {
     display.textContent = 0
     prevNumber = 0;
+    console.log("cleared memory, prevNumber:", prevNumber)
 })
 
 
@@ -98,37 +99,41 @@ operators.forEach(button => {
 
         const containsOperator = Array.from(operators).some(op => display.textContent.includes(op.textContent))
 
-        if(!containsOperator) {
-
-            if (prevNumber !== 0){
-
-                console.log("line 99")
-                console.log("Previous number at 104:", prevNumber)
-
-                prevNumber = display.textContent
-
-                display.textContent = button.textContent
-
-            } else {
+        if (prevNumber == 0){
 
             prevNumber = display.textContent;
 
             display.textContent = button.textContent;
 
-            console.log("Previous Number:", prevNumber)
+            operator = button.textContent
 
-            }
-            
         } else {
+            
+            console.log("line 109")
+            console.log("prevnum 111", prevNumber)
+            console.log("currentNum 111", currentNum)
 
+            currentNum = display.textContent;
+
+            currentNum = Number(currentNum)
+            prevNumber = Number(prevNumber)
+
+            prevNumber = calculate(operator, prevNumber, currentNum)     
+            
+            console.log(prevNumber, "prevNum at 113")
             display.textContent = button.textContent;
-
+        
         }
+
+        
     })
 })
 
+
+
 // calls calculate when pressed equals
 // turns to num
+
 equalsButton.addEventListener("click", () => {
     currentNum = display.textContent;
 
@@ -138,9 +143,10 @@ equalsButton.addEventListener("click", () => {
     currentNum = Number(currentNum)
 
     console.log("equal button operator :", operator, typeof(operator))
-    console.log("equal button prevnum :", prevNumber, typeof(prevNumber))
+    console.log("equal button prevNum :", prevNumber, typeof(prevNumber))
     console.log("equal button currentnum :", currentNum, typeof(currentNum))
 
     display.textContent = calculate(operator, prevNumber, currentNum)
+
 })
 
