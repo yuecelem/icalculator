@@ -7,6 +7,7 @@ const minusButton = document.querySelector(".minus")
 const dividedButton = document.querySelector(".divided")
 const timesButton = document.querySelector(".times")
 const equalsButton = document.querySelector(".equals-button")
+const operators = document.querySelectorAll(".operator")
 
 
 function sum(a, b) {
@@ -60,5 +61,22 @@ function calculate(operator, a, b) {
     if (operator == timesButton.textContent) return multiply(a, b)
 }
 
-equalsButton.addEventListener("click", calculate())
+operators.forEach(button => {
+    button.addEventListener("click", () => {
+        const containsOperator = Array.from(operators).some(op => display.textContent.includes(op.textContent))
+
+        if(!containsOperator) {
+            let prevNumber = display.textContent;
+            display.textContent = button.textContent;
+            console.log(prevNumber)
+        } else {
+            display.textContent = button.textContent;
+        }
+    })
+})
+
+
+
+
+// equalsButton.addEventListener("click", calculate())
 
