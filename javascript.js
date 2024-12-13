@@ -41,7 +41,8 @@ dotButton.addEventListener("click", () => {
 })
 
 
-
+// Clears the display
 clearButton.addEventListener("click", () => {
     display.textContent = 0
 })
+
