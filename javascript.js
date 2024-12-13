@@ -1,3 +1,14 @@
+const numButtons = document.querySelectorAll(".num-button")
+const dotButton = document.querySelector(".dot-button")
+const display = document.querySelector(".display")
+const clearButton = document.querySelector(".clear-button")
+const plusButton = document.querySelector(".plus")
+const minusButton = document.querySelector(".minus")
+const dividedButton = document.querySelector(".divided")
+const timesButton = document.querySelector(".times")
+const equalsButton = document.querySelector(".equals-button")
+
+
 function sum(a, b) {
     return a + b
 }
@@ -17,11 +28,6 @@ function divide(a, b) {
 function percent(a) {
     return a / 100
 }
-
-const numButtons = document.querySelectorAll(".num-button")
-const dotButton = document.querySelector(".dot-button")
-const display = document.querySelector(".display")
-const clearButton = document.querySelector(".clear-button")
 
 display.textContent = 0
 
@@ -45,4 +51,14 @@ dotButton.addEventListener("click", () => {
 clearButton.addEventListener("click", () => {
     display.textContent = 0
 })
+
+// Calls operation function depending on operator 
+function calculate(operator, a, b) {
+    if (operator == plusButton.textContent) return sum(a, b)
+    if (operator == minusButton.textContent) return subtract(a, b)
+    if (operator == dividedButton.textContent) return divide(a, b)
+    if (operator == timesButton.textContent) return multiply(a, b)
+}
+
+equalsButton.addEventListener("click", calculate())
 
