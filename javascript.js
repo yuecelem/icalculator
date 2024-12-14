@@ -1,6 +1,5 @@
 const numButtons = document.querySelectorAll(".num-button")
 const dotButton = document.querySelector(".dot-button")
-const display = document.querySelector(".display")
 const clearButton = document.querySelector(".clear-button")
 const plusButton = document.querySelector(".plus")
 const minusButton = document.querySelector(".minus")
@@ -8,7 +7,13 @@ const dividedButton = document.querySelector(".divided")
 const timesButton = document.querySelector(".times")
 const equalsButton = document.querySelector(".equals-button")
 const operators = document.querySelectorAll(".operator")
+const mainDisplay = document.querySelector(".main-display")
+const subDisplay = document.querySelector(".sub-display")
+const percentButton = document.querySelector(".percent")
 
+
+
+const operatorsList = ["+", "-", "/", "*"]
 
 function sum(a, b) {
     return a + b;
@@ -30,57 +35,6 @@ function percent(a) {
     return a / 100
 }
 
-display.textContent = 0
-let operator = ""
-let prevNumber = 0
-let currentNum = 0
-
-console.log(divide(20, 4))
-
-// Adds numButton content to display on each click. 
-// If 0 is displayed, removes and then adds
-// Saves operator if it was displayed 
-
-numButtons.forEach(button => {
-    button.addEventListener("click", () => {
-
-        const containsOperator = Array.from(operators).some(op => display.textContent.includes(op.textContent))
-
-        if (containsOperator) {
-            operator = display.textContent;
-            display.textContent = ""
-            display.append(button.textContent) 
-            console.log("Operator Saved:", operator)
-            return operator
-        }
-        else if (display.textContent == "0"){
-            display.textContent = ""
-            display.append(button.textContent)     
-        } else {display.append(button.textContent)}})})
-
-
-
-
-// Adds . if it doesnt exist in the display
-dotButton.addEventListener("click", () => {
-    if (!display.textContent.includes(dotButton.textContent)){
-    display.append(dotButton.textContent)}
-})
-
-
-
-
-
-// Clears the display
-clearButton.addEventListener("click", () => {
-    display.textContent = 0
-    prevNumber = 0;
-    console.log("cleared memory, prevNumber:", prevNumber)
-})
-
-
-
-
 // Calls operation function depending on operator 
 function calculate(operator, a, b) {
     if (operator == plusButton.textContent) return sum(a, b)
@@ -89,64 +43,135 @@ function calculate(operator, a, b) {
     if (operator == timesButton.textContent) return multiply(a, b)
 }
 
-// checks if operator texts are included in the previous display
-// if so replaces with new without saving
-// if not saves the previous display num as prevNumber
-// In case there was a previous answer, saves it to prevNumber
+
+
+// Clears the display
+clearButton.addEventListener("click", () => {
+    mainDisplay.textContent = '';
+    subDisplay.textContent = '';
+    console.log("Cleared!")
+})
+
+
+// let operator = ""
+// let prevNumber = 0
+// let currentNum = 0
+
+
+
+
+numButtons.forEach(button => {
+    button.addEventListener("click", () => {
+
+        //checks if operator exists in mainDisplay
+        const mainDisplayContainsOperator = operatorsList.some((operator) => mainDisplay.textContent.includes(operator))
+
+        if (!mainDisplayContainsOperator){
+            
+            mainDisplay.append(button.textContent); //appends number next to existing num in main
+
+        } else { 
+            
+            subDisplay.append(" " + mainDisplay.textContent); //appends number to sub if operator was present
+
+            mainDisplay.textContent = ''; //clears mainDisplay
+
+            mainDisplay.append(button.textContent); //append pressed number
+        
+        }
+    
+    })})
+
+
+
+
+
+
 
 operators.forEach(button => {
     button.addEventListener("click", () => {
 
-        const containsOperator = Array.from(operators).some(op => display.textContent.includes(op.textContent))
+        //checks if operator exists in mainDisplay
+        const mainDisplayContainsOperator = operatorsList.some((operator) => mainDisplay.textContent.includes(operator))
 
-        if (prevNumber == 0){
 
-            prevNumber = display.textContent;
+        if (subDisplay.textContent.includes("=")){  //if previous calculation is shown clear subdisplay
 
-            display.textContent = button.textContent;
+            subDisplay.textContent = mainDisplay.textContent;
 
-            operator = button.textContent
+            mainDisplay.textContent = button.textContent;
 
         } else {
-            
-            console.log("line 109")
-            console.log("prevnum 111", prevNumber)
-            console.log("currentNum 111", currentNum)
+  
+            if (!mainDisplayContainsOperator){
+                
+                if (!subDisplay.textContent) { // if subdisplay is empty dont append space
 
-            currentNum = display.textContent;
+                subDisplay.append(mainDisplay.textContent); //appends existing maindisplay number to subdisplay
+                
+                mainDisplay.textContent = button.textContent; //replaces the swapped number with operator
 
-            currentNum = Number(currentNum)
-            prevNumber = Number(prevNumber)
+                } else {
 
-            prevNumber = calculate(operator, prevNumber, currentNum)     
-            
-            console.log(prevNumber, "prevNum at 113")
-            display.textContent = button.textContent;
-        
+                    subDisplay.append(" " + mainDisplay.textContent); //appends existing maindisplay number to subdisplay
+                
+                    mainDisplay.textContent = button.textContent; //replaces the swapped number with operator
+
+                }
+
+            } else { 
+
+                mainDisplay.textContent = button.textContent; //switches the maindisplay operator
+
+            }
         }
-
         
     })
 })
 
 
+percentButton.addEventListener("click", () => {
 
-// calls calculate when pressed equals
-// turns to num
+    mainDisplay.textContent = Number(mainDisplay.textContent) / 100;
+
+})
+
+dotButton.addEventListener("click", () => {
+    if (!mainDisplay.textContent.includes(".")) mainDisplay.append(".")
+})
 
 equalsButton.addEventListener("click", () => {
-    currentNum = display.textContent;
 
-    display.textContent = "";
+    subDisplay.append(" " + mainDisplay.textContent); //appends existing maindisplay number to subdisplay
+    
+    console.log("Subdisplay: ", typeof(subDisplay.textContent));
 
-    prevNumber = Number(prevNumber)
-    currentNum = Number(currentNum)
+    const subArray = subDisplay.textContent.split(" ");
 
-    console.log("equal button operator :", operator, typeof(operator))
-    console.log("equal button prevNum :", prevNumber, typeof(prevNumber))
-    console.log("equal button currentnum :", currentNum, typeof(currentNum))
+    let nums = subArray.filter((item) => /\d/.test(item));
+    
+    //make nums elements number
+    for (let i = 0; i < nums.length; i++) {
+        nums[i] = Number(nums[i]);
+    }
+    
+    const operatorsInSubArray = subArray.filter((item) => /[+\-*/]/.test(item));
 
-    display.textContent = calculate(operator, prevNumber, currentNum)
+    console.log("Numbers are:", nums)
+    console.log("Operators are:", operatorsInSubArray)
+    
+    subDisplay.append(" " + equalsButton.textContent); //appends equals sign for understandability only
+
+
+    //for each operator runs calculate on first 2 elemetns of num and replaces them with result
+    for (let i = 0; i < operatorsInSubArray.length; i++) {
+
+        let result = calculate(operatorsInSubArray[i], nums[0], nums[1]);
+        nums.splice(0, 2, result);
+
+    }
+    
+    mainDisplay.textContent = nums
 
 })
 
