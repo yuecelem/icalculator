@@ -142,6 +142,9 @@ dotButton.addEventListener("click", () => {
 
 equalsButton.addEventListener("click", () => {
 
+
+    if (mainDisplay.textContent != ''){
+
     subDisplay.append(" " + mainDisplay.textContent); //appends existing maindisplay number to subdisplay
     
     console.log("Subdisplay: ", typeof(subDisplay.textContent));
@@ -173,5 +176,6 @@ equalsButton.addEventListener("click", () => {
     
     mainDisplay.textContent = nums
 
+}
 })
 
